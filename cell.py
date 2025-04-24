@@ -35,6 +35,7 @@ class Cell:
         self.has_bottom_wall = has_bottom_wall
 
     def draw(self) -> None:
+        """Draws the separate walls of the cell."""
         if self.has_top_wall:
             self._win.draw_line(self._top_wall, self._wall_color)
         if self.has_left_wall:
@@ -45,5 +46,13 @@ class Cell:
             self._win.draw_line(self._right_wall, self._wall_color)
             
     def draw_move(self, to_cell: 'Cell', undo: bool = False) -> None:
+        """Draws a line between the center of this cell and another.
+
+        Args:
+            to_cell (Cell): The target cell
+            undo (bool, optional): Whether this draw operation is an undo.
+                Normal lines are colored red, but undo lines are colored gray.
+                Defaults to False.
+        """
         fill_color = "gray" if undo else "red"
         self._win.draw_line(Line(self._center, to_cell._center), fill_color)

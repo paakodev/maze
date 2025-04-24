@@ -15,6 +15,7 @@ class Window:
         self.__root.update()
         
     def wait_for_close(self) -> None:
+        """Enter main loop and keep redrawing until the window is closed."""
         self.__running = True
         while self.__running:
             self.redraw()
