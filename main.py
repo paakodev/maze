@@ -17,6 +17,8 @@ def main() -> None:
     cell2 = Cell(130, 240, 400, 570, window, "red")
     cell2.has_bottom_wall = False
     cell2.draw()
+    
+    cell1.draw_move(cell2, False)
     window.wait_for_close()
 
 if __name__ == "__main__":
