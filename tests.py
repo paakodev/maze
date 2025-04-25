@@ -91,6 +91,19 @@ class Tests(unittest.TestCase):
         except Exception as e:
             self.fail(f"_draw_cell failed in headless mode: {e}")
             
+    def test_break_entrance(self):
+        m = Maze(0, 0, 5, 5, 10, 10, win=None)
+        m._break_entrance_and_exit()
+        entrance = m._cells[0][0]
+        self.assertFalse(entrance.has_top_wall)
+
+    def test_break_exit(self):
+        m = Maze(0, 0, 5, 5, 10, 10, win=None)
+        m._break_entrance_and_exit()
+        exit = m._cells[5 - 1][5 - 1]  # last column, last row
+        self.assertFalse(exit.has_bottom_wall)
+
+            
     # ----------------------------
     # Tests for Cell
     # ----------------------------
