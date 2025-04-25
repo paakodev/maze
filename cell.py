@@ -11,6 +11,20 @@ class Cell:
                  has_top_wall: bool = True,
                  has_bottom_wall: bool = True
                  ) -> None:
+        """This class represents a single cell of a rectangular maze.
+
+        Args:
+            x1 (int): Upper-left X coordinate
+            y1 (int): Upper-left Y coordinate
+            x2 (int): Lower-right X coordinate
+            y2 (int): Lower-right Y coordinate
+            window (Window): The window this cell is to be painted in
+            wall_color (str, optional): The color used for the walls. Defaults to "black".
+            has_left_wall (bool, optional): Is the left wall present. Defaults to True.
+            has_right_wall (bool, optional): Is the right wall present. Defaults to True.
+            has_top_wall (bool, optional): Is the top wall present. Defaults to True.
+            has_bottom_wall (bool, optional): Is the bottom wall present. Defaults to True.
+        """
         self._x1 = x1
         self._y1 = y1
         self._x2 = x2
