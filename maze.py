@@ -60,6 +60,6 @@ class Maze:
         entrance = self._cells[0][0]
         entrance.has_top_wall = False
         entrance.draw()
-        exit = self._cells[self._num_cols][self._num_rows]
+        exit = self._cells[self._num_cols - 1][self._num_rows - 1]
         exit.has_bottom_wall = False
         exit.draw()
