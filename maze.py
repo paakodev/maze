@@ -1,0 +1,49 @@
+
+from time import sleep
+from cell import Cell
+from window import Window
+
+class Maze:
+    def __init__(
+        self,
+        x1: int,
+        y1: int,
+        num_rows: int,
+        num_cols: int,
+        cell_size_x: int,
+        cell_size_y: int,
+        win: Window,
+        draw_delay: float = 0.05
+    ) -> None:
+        self._x1 = x1
+        self._y1 = y1
+        self._num_rows = num_rows
+        self._num_cols = num_cols
+        self._cell_size_x = cell_size_x
+        self._cell_size_y = cell_size_y
+        self._win = win
+        self._draw_delay = draw_delay
+        self._create_cells()
+    
+    def _create_cells(self) -> None:
+        self._cells = []
+        for i in range(self._num_cols):  # Columns first
+            column = []
+            for j in range(self._num_rows):  # Then rows
+                cell = Cell(self._x1 + i*self._cell_size_x,  # i for column (x)
+                            self._y1 + j*self._cell_size_y,  # j for row (y)
+                            self._x1 + (i+1)*self._cell_size_x,
+                            self._y1 + (j+1)*self._cell_size_y,
+                            self._win)
+                column.append(cell)
+                self._draw_cell(j, i)  # Note the argument order: row, column
+            self._cells.append(column)
+    
+    def _draw_cell(self, i: int, j: int) -> None:
+        cell = self._cells[j][i]
+        cell.draw()
+        self._animate()
+    
+    def _animate(self) -> None:
+        self._win.redraw()
+        sleep(self._draw_delay)
