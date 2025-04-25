@@ -3,6 +3,9 @@ from cell import Cell
 from maze import Maze
 
 class Tests(unittest.TestCase):
+    # ----------------------------
+    # Tests for Maze
+    # ----------------------------
     def test_maze_create_cells(self):
         num_cols = 12
         num_rows = 10
@@ -87,6 +90,48 @@ class Tests(unittest.TestCase):
             m._draw_cell(0, 0)  # Should no-op
         except Exception as e:
             self.fail(f"_draw_cell failed in headless mode: {e}")
+            
+    # ----------------------------
+    # Tests for Cell
+    # ----------------------------
+
+    def test_cell_geometry(self):
+        c = Cell(10, 20, 30, 40)
+        self.assertEqual(c._top_left.x, 10)
+        self.assertEqual(c._top_left.y, 20)
+        self.assertEqual(c._bottom_right.x, 30)
+        self.assertEqual(c._bottom_right.y, 40)
+        self.assertEqual(c._center.x, 20)
+        self.assertEqual(c._center.y, 30)
+
+    def test_default_wall_flags(self):
+        c = Cell(0, 0, 10, 10)
+        self.assertTrue(c.has_top_wall)
+        self.assertTrue(c.has_bottom_wall)
+        self.assertTrue(c.has_left_wall)
+        self.assertTrue(c.has_right_wall)
+
+    def test_custom_wall_flags(self):
+        c = Cell(0, 0, 10, 10, has_top_wall=False, has_right_wall=False)
+        self.assertFalse(c.has_top_wall)
+        self.assertTrue(c.has_bottom_wall)
+        self.assertTrue(c.has_left_wall)
+        self.assertFalse(c.has_right_wall)
+
+    def test_cell_draw_headless(self):
+        c = Cell(0, 0, 10, 10)
+        try:
+            c.draw()  # Should not raise
+        except Exception as e:
+            self.fail(f"draw() failed in headless mode: {e}")
+
+    def test_cell_draw_move_headless(self):
+        c1 = Cell(0, 0, 10, 10)
+        c2 = Cell(10, 0, 20, 10)
+        try:
+            c1.draw_move(c2)
+        except Exception as e:
+            self.fail(f"draw_move() failed in headless mode: {e}")
 
 
 if __name__ == "__main__":

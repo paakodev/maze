@@ -71,5 +71,7 @@ class Cell:
                 Normal lines are colored red, but undo lines are colored gray.
                 Defaults to False.
         """
+        if self._win is None:
+            return # 'Headless' mode for testing purposes.
         fill_color = "gray" if undo else "red"
         self._win.draw_line(Line(self._center, to_cell._center), fill_color)
