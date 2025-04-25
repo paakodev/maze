@@ -1,6 +1,7 @@
+from dataclasses import dataclass
 
 # 0,0 is top-left of screen
+@dataclass(frozen=True)
 class Point:
-    def __init__(self, x: int, y: int) -> None:
-        self.x = x
-        self.y = y
+    x: int
+    y: int
