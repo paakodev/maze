@@ -1,4 +1,5 @@
 import unittest
+from cell import Cell
 from maze import Maze
 
 class Tests(unittest.TestCase):
@@ -48,6 +49,44 @@ class Tests(unittest.TestCase):
             c.draw()  # Should do nothing and not raise
         except Exception as e:
             self.fail(f"draw() raised unexpectedly in headless mode: {e}")
+            
+    def test_maze_grid_indexing(self):
+        m = Maze(0, 0, 3, 4, 10, 10)  # 3 rows, 4 columns
+        # Top-left corner cell
+        tl = m._cells[0][0]
+        self.assertEqual(tl._x1, 0)
+        self.assertEqual(tl._y1, 0)
+        # Bottom-right corner cell
+        br = m._cells[4 - 1][3 - 1]
+        self.assertEqual(br._x1, 30)
+        self.assertEqual(br._y1, 20)
+
+    def test_maze_cell_spacing(self):
+        m = Maze(0, 0, 2, 2, 15, 20)
+        cell00 = m._cells[0][0]
+        cell01 = m._cells[0][1]
+        self.assertEqual(cell01._y1 - cell00._y1, 20)
+        cell10 = m._cells[1][0]
+        self.assertEqual(cell10._x1 - cell00._x1, 15)
+
+    def test_all_cells_are_cells(self):
+        m = Maze(0, 0, 3, 3, 10, 10)
+        for col in m._cells:
+            for cell in col:
+                self.assertIsInstance(cell, Cell)
+
+    def test_maze_headless_mode(self):
+        try:
+            m = Maze(0, 0, 5, 5, 10, 10, win=None)
+        except Exception as e:
+            self.fail(f"Maze init failed in headless mode: {e}")
+
+    def test_maze_draw_cell_headless(self):
+        m = Maze(0, 0, 1, 1, 10, 10, win=None)
+        try:
+            m._draw_cell(0, 0)  # Should no-op
+        except Exception as e:
+            self.fail(f"_draw_cell failed in headless mode: {e}")
 
 
 if __name__ == "__main__":
