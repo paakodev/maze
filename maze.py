@@ -12,9 +12,11 @@ class Maze:
         num_cols: int,
         cell_size_x: int,
         cell_size_y: int,
-        win: Window,
-        draw_delay: float = 0.05
+        draw_delay: float = 0.05,
+        win: Window = None
     ) -> None:
+        """ The maze class, handles creating the entire maze. Do not leave Window unset,
+        the default is there to facilitate testing."""
         self._x1 = x1
         self._y1 = y1
         self._num_rows = num_rows

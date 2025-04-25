@@ -4,7 +4,8 @@ from line import Line
 
 class Cell:
     def __init__(self, 
-                 x1: int, y1: int, x2: int, y2: int, window: Window,
+                 x1: int, y1: int, x2: int, y2: int, 
+                 window: Window = None,
                  wall_color: str = "black",
                  has_left_wall: bool = True, 
                  has_right_wall: bool = True,
@@ -18,7 +19,7 @@ class Cell:
             y1 (int): Upper-left Y coordinate
             x2 (int): Lower-right X coordinate
             y2 (int): Lower-right Y coordinate
-            window (Window): The window this cell is to be painted in
+            window (Window): The window this cell is to be painted in. Do not leave empty, the default exists to handle testing.
             wall_color (str, optional): The color used for the walls. Defaults to "black".
             has_left_wall (bool, optional): Is the left wall present. Defaults to True.
             has_right_wall (bool, optional): Is the right wall present. Defaults to True.
@@ -50,6 +51,8 @@ class Cell:
 
     def draw(self) -> None:
         """Draws the separate walls of the cell."""
+        if self._win is None:
+            return # 'Headless' mode for testing purposes.
         if self.has_top_wall:
             self._win.draw_line(self._top_wall, self._wall_color)
         if self.has_left_wall:
