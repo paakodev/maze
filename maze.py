@@ -38,8 +38,12 @@ class Maze:
                             self._y1 + (j+1)*self._cell_size_y,
                             self._win)
                 column.append(cell)
-                self._draw_cell(j, i)  # Note the argument order: row, column
             self._cells.append(column)
+        
+        # Draw cells after all are created
+        for i in range(self._num_cols):
+            for j in range(self._num_rows):
+                self._draw_cell(j, i)
     
     def _draw_cell(self, i: int, j: int) -> None:
         cell = self._cells[j][i]
@@ -47,5 +51,7 @@ class Maze:
         self._animate()
     
     def _animate(self) -> None:
+        if self._win is None:
+            return # 'Headless' mode for testing
         self._win.redraw()
         sleep(self._draw_delay)
