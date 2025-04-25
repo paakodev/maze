@@ -7,6 +7,7 @@ class Cell:
                  x1: int, y1: int, x2: int, y2: int, 
                  window: Window = None,
                  wall_color: str = "black",
+                 removed_color: str = None,
                  has_left_wall: bool = True, 
                  has_right_wall: bool = True,
                  has_top_wall: bool = True,
@@ -21,6 +22,7 @@ class Cell:
             y2 (int): Lower-right Y coordinate
             window (Window): The window this cell is to be painted in. Do not leave empty, the default exists to handle testing.
             wall_color (str, optional): The color used for the walls. Defaults to "black".
+            removed_color (str, optional): The color used for removed walls. Defaults to the canvas' background color.
             has_left_wall (bool, optional): Is the left wall present. Defaults to True.
             has_right_wall (bool, optional): Is the right wall present. Defaults to True.
             has_top_wall (bool, optional): Is the top wall present. Defaults to True.
@@ -44,6 +46,7 @@ class Cell:
         # Precompute center
         self._center = Point((x1+x2)//2, (y1+y2)//2)
         self._wall_color = wall_color
+        self._removed_color = removed_color if removed_color else self._win.bg_color
         self.has_left_wall = has_left_wall
         self.has_right_wall = has_right_wall
         self.has_top_wall = has_top_wall
@@ -53,14 +56,18 @@ class Cell:
         """Draws the separate walls of the cell."""
         if self._win is None:
             return # 'Headless' mode for testing purposes.
-        if self.has_top_wall:
-            self._win.draw_line(self._top_wall, self._wall_color)
-        if self.has_left_wall:
-            self._win.draw_line(self._left_wall, self._wall_color)
-        if self.has_bottom_wall:
-            self._win.draw_line(self._bottom_wall, self._wall_color)
-        if self.has_right_wall:
-            self._win.draw_line(self._right_wall, self._wall_color)
+        
+        color = self._wall_color if self.has_top_wall else self._removed_color
+        self._win.draw_line(self._top_wall, color)
+        
+        color = self._wall_color if self.has_left_wall else self._removed_color
+        self._win.draw_line(self._left_wall, color)
+        
+        color = self._wall_color if self.has_bottom_wall else self._removed_color
+        self._win.draw_line(self._bottom_wall, color)
+        
+        color = self._wall_color if self.has_right_wall else self._removed_color
+        self._win.draw_line(self._right_wall, color)
             
     def draw_move(self, to_cell: 'Cell', undo: bool = False) -> None:
         """Draws a line between the center of this cell and another.

@@ -7,6 +7,7 @@ class Window:
         self.__root.title("A simple maze solver")
         self.__root.protocol("WM_DELETE_WINDOW", self.close)
         self.__canvas = Canvas(self.__root, width=width, height=height)
+        self.bg_color = self.__canvas.cget("background")
         self.__canvas.pack()
         self.__running = False
         
