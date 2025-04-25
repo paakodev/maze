@@ -57,17 +57,22 @@ class Cell:
         if self._win is None:
             return # 'Headless' mode for testing purposes.
         
-        color = self._wall_color if self.has_top_wall else self._removed_color
-        self._win.draw_line(self._top_wall, color)
-        
-        color = self._wall_color if self.has_left_wall else self._removed_color
-        self._win.draw_line(self._left_wall, color)
-        
-        color = self._wall_color if self.has_bottom_wall else self._removed_color
-        self._win.draw_line(self._bottom_wall, color)
-        
-        color = self._wall_color if self.has_right_wall else self._removed_color
-        self._win.draw_line(self._right_wall, color)
+        walls = [
+            (self._top_wall, self.has_top_wall),
+            (self._left_wall, self.has_left_wall),
+            (self._bottom_wall, self.has_bottom_wall),
+            (self._right_wall, self.has_right_wall),
+        ]
+
+        # Pass 1: draw removed walls (erase)
+        for wall, exists in walls:
+            if not exists:
+                self._win.draw_line(wall, self._removed_color)
+
+        # Pass 2: draw present walls (overwrite)
+        for wall, exists in walls:
+            if exists:
+                self._win.draw_line(wall, self._wall_color)
             
     def draw_move(self, to_cell: 'Cell', undo: bool = False) -> None:
         """Draws a line between the center of this cell and another.
