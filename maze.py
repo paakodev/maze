@@ -28,9 +28,9 @@ class Maze:
         self._create_cells()
     
     def _create_cells(self) -> None:
-        self._cells = []
+        self._cells: list[list[Cell]] = []
         for i in range(self._num_cols):  # Columns first
-            column = []
+            column: list[Cell] = []
             for j in range(self._num_rows):  # Then rows
                 cell = Cell(self._x1 + i*self._cell_size_x,  # i for column (x)
                             self._y1 + j*self._cell_size_y,  # j for row (y)
@@ -55,3 +55,11 @@ class Maze:
             return # 'Headless' mode for testing
         self._win.redraw()
         sleep(self._draw_delay)
+        
+    def _break_entrance_and_exit(self):
+        entrance = self._cells[0][0]
+        entrance.has_top_wall = False
+        entrance.draw()
+        exit = self._cells[self._num_cols][self._num_rows]
+        exit.has_bottom_wall = False
+        exit.draw()
