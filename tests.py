@@ -3,9 +3,7 @@ from cell import Cell
 from maze import Maze
 
 class Tests(unittest.TestCase):
-    # ----------------------------
-    # Tests for Maze
-    # ----------------------------
+    #region Maze tests
     def test_maze_create_cells(self):
         num_cols = 12
         num_rows = 10
@@ -38,8 +36,8 @@ class Tests(unittest.TestCase):
         self.assertEqual(bottom_right._y2, 20)
 
     def test_default_cell_walls(self):
-        m = Maze(0, 0, 1, 1, 10, 10)
-        cell = m._cells[0][0]
+        m = Maze(0, 0, 2, 2, 10, 10)
+        cell = m._cells[1][1]
         self.assertTrue(cell.has_top_wall)
         self.assertTrue(cell.has_bottom_wall)
         self.assertTrue(cell.has_left_wall)
@@ -102,12 +100,42 @@ class Tests(unittest.TestCase):
         m._break_entrance_and_exit()
         exit = m._cells[5 - 1][5 - 1]  # last column, last row
         self.assertFalse(exit.has_bottom_wall)
+        
+    def test_reset_all_cells_visited(self):
+        num_cols = 5
+        num_rows = 5
+        m = Maze(0, 0, num_rows, num_cols, 10, 10)
+        
+        # Mark all cells as visited manually
+        for col in m._cells:
+            for cell in col:
+                cell.visited = True
 
+        m._reset_cells_visited()
+
+        # Check that all cells are now unvisited
+        for col in m._cells:
+            for cell in col:
+                self.assertFalse(cell.visited)
+        
+    def test_reset_one_cell_visited(self):
+        num_cols = 5
+        num_rows = 5
+        m = Maze(0, 0, num_rows, num_cols, 10, 10)
+        
+        # Mark one cell visited manually
+        m._cells[3][3].visited = True
+
+        m._reset_cells_visited()
+
+        # Check that all cells are now unvisited
+        for col in m._cells:
+            for cell in col:
+                self.assertFalse(cell.visited)
+
+    #endregion
             
-    # ----------------------------
-    # Tests for Cell
-    # ----------------------------
-
+    #region Cell tests
     def test_cell_geometry(self):
         c = Cell(10, 20, 30, 40)
         self.assertEqual(c._top_left.x, 10)
@@ -145,6 +173,8 @@ class Tests(unittest.TestCase):
             c1.draw_move(c2)
         except Exception as e:
             self.fail(f"draw_move() failed in headless mode: {e}")
+            
+    #endregion
 
 
 if __name__ == "__main__":

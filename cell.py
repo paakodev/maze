@@ -46,11 +46,11 @@ class Cell:
         # Precompute center
         self._center = Point((x1+x2)//2, (y1+y2)//2)
         self._wall_color = wall_color
-        self._removed_color = removed_color if removed_color else self._win.bg_color
         self.has_left_wall = has_left_wall
         self.has_right_wall = has_right_wall
         self.has_top_wall = has_top_wall
         self.has_bottom_wall = has_bottom_wall
+        self._removed_color = removed_color or (self._win.bg_color if self._win else "white")
         
         self.visited = False # For generation/solving
         

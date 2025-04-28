@@ -30,8 +30,25 @@ class Maze:
         
         random.seed(a=seed)
         self._create_cells()
+        # If we're testing in headless mode, early exit
+        if not win:
+            return
         self._break_entrance_and_exit()
         self._break_walls_r(0, 0)
+        self._reset_cells_visited()
+        
+    # def __repr__(self) -> str:
+    #     return (f"Maze(rows={self._num_rows}, cols={self._num_cols}, "
+    #            f"cell_size_x={self._cell_size_x}, cell_size_y={self._cell_size_y})")
+        
+    # def __repr__(self) -> str:
+    #     output = f"Maze(rows={self._num_rows}, cols={self._num_cols})\n"
+    #     for row in range(self._num_rows):
+    #         for col in range(self._num_cols):
+    #             cell = self._cells[col][row]
+    #             output += cell.__repr__()
+    #         output += "\n"
+    #     return output
     
     def _create_cells(self) -> None:
         self._cells: list[list[Cell]] = []
@@ -90,8 +107,8 @@ class Maze:
 
         return neighbors
        
-    def _draw_cell(self, i: int, j: int) -> None:
-        cell = self._get_cell(i, j)
+    def _draw_cell(self, row: int, col: int) -> None:
+        cell = self._get_cell(row, col)
         cell.draw()
         self._animate()
     
@@ -139,3 +156,7 @@ class Maze:
             
             self._break_walls_r(new_i, new_j)
         
+    def _reset_cells_visited(self) -> None:
+        for col in self._cells:
+            for cell in col:
+                cell.visited = False
