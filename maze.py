@@ -1,4 +1,5 @@
 
+import random
 from time import sleep
 from cell import Cell
 from window import Window
@@ -13,7 +14,8 @@ class Maze:
         cell_size_x: int,
         cell_size_y: int,
         win: Window = None,
-        draw_delay: float = 0.05
+        draw_delay: float = 0.05,
+        seed: int = None
     ) -> None:
         """ The maze class, handles creating the entire maze. Do not leave Window unset,
         the default is there to facilitate testing."""
@@ -25,7 +27,11 @@ class Maze:
         self._cell_size_y = cell_size_y
         self._win = win
         self._draw_delay = draw_delay
+        
+        random.seed(a=seed)
         self._create_cells()
+        self._break_entrance_and_exit()
+        self._break_walls_r(0, 0)
     
     def _create_cells(self) -> None:
         self._cells: list[list[Cell]] = []
@@ -44,9 +50,48 @@ class Maze:
         for i in range(self._num_cols):
             for j in range(self._num_rows):
                 self._draw_cell(j, i)
+                
+    def _get_cell(self, row: int, col: int) -> Cell:
+        """We store our grid as [column][row]. Instead of breaking my brain every time
+        I need to look up a cell, as coordinates are usually given as [row][column], 
+        have a helper function.
+        """
+        return self._cells[col][row]
     
+    def _in_bounds(self, row: int, col: int) -> bool:
+        """Helper function to check if a given coordinate can exist in our maze"""
+        return 0 <= row < self._num_rows and 0 <= col < self._num_cols
+        
+    def _get_neighbors(self, row: int, col: int) -> list[tuple[Cell, str, int, int]]:
+        """Generates and returns a list of (Cell, direction, new_row, new_col) 
+        tuples for the cell at the given coordinates.
+
+        Args:
+            row (int): Cell row coordinate.
+            col (int): Cell column coordinate
+
+        Returns:
+            list[tuple[Cell, str, int, int]]: 
+                A list of tuples with (Cell, direction, new_row, new_col).
+        """
+        neighbors = []
+        directions = [
+            (-1, 0, "up"),
+            (1, 0, "down"),
+            (0, -1, "left"),
+            (0, 1, "right"),
+        ]
+
+        for d_row, d_col, direction in directions:
+            new_row, new_col = row + d_row, col + d_col
+            if self._in_bounds(new_row, new_col):
+                neighbor = self._get_cell(new_row, new_col)
+                neighbors.append((neighbor, direction, new_row, new_col))
+
+        return neighbors
+       
     def _draw_cell(self, i: int, j: int) -> None:
-        cell = self._cells[j][i]
+        cell = self._get_cell(i, j)
         cell.draw()
         self._animate()
     
@@ -57,9 +102,40 @@ class Maze:
         sleep(self._draw_delay)
         
     def _break_entrance_and_exit(self):
-        entrance = self._cells[0][0]
+        entrance = self._get_cell(0, 0)
         entrance.has_top_wall = False
         entrance.draw()
-        exit = self._cells[self._num_cols - 1][self._num_rows - 1]
+        exit = self._get_cell(self._num_rows - 1, self._num_cols - 1)
         exit.has_bottom_wall = False
         exit.draw()
+    
+    def _break_walls_r(self, i: int, j: int) -> None:
+        """A recursive back-tracking maze generator.
+
+        Args:
+            i (int): Cell row coordinate
+            j (int): Cell column coordinate
+        """
+        current = self._get_cell(i, j)
+        current.visited = True
+        
+        while True:
+            # Generate list of tuples of unvisited neighboring cells, refreshed
+            # after recursion
+            neighbors = [
+                (cell, direction, n_row, n_col) 
+                for cell, direction, n_row, n_col in self._get_neighbors(i,j) 
+                if not cell.visited
+            ]
+                    
+            # Dead end, so start heading home
+            if not neighbors:
+                current.draw()
+                return
+
+            target, direction, new_i, new_j = random.choice(neighbors)
+            current.break_wall(direction)
+            target.break_wall(direction, inverse=True)
+            
+            self._break_walls_r(new_i, new_j)
+        

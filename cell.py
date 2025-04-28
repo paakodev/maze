@@ -51,6 +51,16 @@ class Cell:
         self.has_right_wall = has_right_wall
         self.has_top_wall = has_top_wall
         self.has_bottom_wall = has_bottom_wall
+        
+        self.visited = False # For generation/solving
+        
+    def __repr__(self) -> str:
+        return (f"Cell(x1={self._x1}, y1={self._y1}, x2={self._x2}, y2={self._y2}, "
+                f"L={'Y' if self.has_left_wall else 'N'}, "
+                f"R={'Y' if self.has_right_wall else 'N'}, "
+                f"T={'Y' if self.has_top_wall else 'N'}, "
+                f"B={'Y' if self.has_bottom_wall else 'N'}, "
+                f"visited={'Y' if self.visited else 'N'})")
 
     def draw(self) -> None:
         """Draws the separate walls of the cell."""
@@ -87,3 +97,46 @@ class Cell:
             return # 'Headless' mode for testing purposes.
         fill_color = "gray" if undo else "red"
         self._win.draw_line(Line(self._center, to_cell._center), fill_color)
+        
+    def has_wall(self, direction: str) -> bool:
+        """Check for wall based on direction (as a string)"""
+        match (direction):
+            case "up":
+                return self.has_top_wall
+            case "down":
+                return self.has_bottom_wall
+            case "left":
+                return self.has_left_wall
+            case "right":
+                return self.has_right_wall
+            case _:
+                raise ValueError(f"Unknown direction: {direction}")
+
+    def break_wall(self, direction: str, inverse: bool = False) -> None:
+        """Break the wall in the indicated direction. If 'inverse' is set,
+        break the opposite wall.
+        """
+        if not inverse:
+            match (direction):
+                case "up":
+                    self.has_top_wall = False
+                case "down":
+                    self.has_bottom_wall = False
+                case "left":
+                    self.has_left_wall = False
+                case "right":
+                    self.has_right_wall = False
+                case _:
+                    raise ValueError(f"Unknown direction: {direction}")
+        else: # Opposite wall
+            match (direction):
+                case "up":
+                    self.has_bottom_wall = False
+                case "down":
+                    self.has_top_wall = False
+                case "left":
+                    self.has_right_wall = False
+                case "right":
+                    self.has_left_wall = False
+                case _:
+                    raise ValueError(f"Unknown direction: {direction}")

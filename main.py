@@ -20,7 +20,7 @@ def main() -> None:
     # cell2.draw()
     
     # cell1.draw_move(cell2, False)
-    maze = Maze(10, 10, 10, 10, 20, 20, window)
+    maze = Maze(10, 10, 10, 10, 20, 20, window, seed=0)
     maze._break_entrance_and_exit()
     window.wait_for_close()
 
