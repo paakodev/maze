@@ -159,7 +159,7 @@ class Tests(unittest.TestCase):
         self.assertTrue(c.has_left_wall)
         self.assertFalse(c.has_right_wall)
 
-    def test_cell_draw_headless(self):
+    def test_cell_draw_headless2(self):
         c = Cell(0, 0, 10, 10)
         try:
             c.draw()  # Should not raise
