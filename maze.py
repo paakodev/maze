@@ -120,9 +120,11 @@ class Maze:
     def _break_entrance_and_exit(self):
         entrance = self._get_cell(0, 0)
         entrance.has_top_wall = False
+        self._entrance_position = (0, 0)
         entrance.draw()
         exit = self._get_cell(self._num_rows - 1, self._num_cols - 1)
         exit.has_bottom_wall = False
+        self._exit_position = (self._num_rows - 1, self._num_cols - 1)
         exit.draw()
     
     def _break_walls_r(self, i: int, j: int) -> None:
@@ -159,3 +161,24 @@ class Maze:
         for col in self._cells:
             for cell in col:
                 cell.visited = False
+
+    def solve(self) -> bool:
+        return self._solve_r(0, 0)
+    
+    def _solve_r(self, row: int, col: int) -> bool:
+        if (row, col) == self._exit_position:
+            return True
+        self._animate()
+        current = self._get_cell(row, col)
+        current.visited = True
+        neighbors = self._get_neighbors(row, col)
+        for cell, direction, new_row, new_col in neighbors:
+            if not current.has_wall(direction) and not cell.visited:
+                current.draw_move(cell)
+                result = self._solve_r(new_row, new_col)
+                if result:
+                    return True
+                else:
+                    current.draw_move(cell, undo=True)
+        
+        return False
