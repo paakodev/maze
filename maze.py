@@ -30,13 +30,7 @@ class Maze:
         
         random.seed(a=seed)
         self._create_cells()
-        # If we're testing in headless mode, early exit
-        if not win:
-            return
-        self._break_entrance_and_exit()
-        self._break_walls_r(0, 0)
-        self._reset_cells_visited()
-        
+
     # def __repr__(self) -> str:
     #     return (f"Maze(rows={self._num_rows}, cols={self._num_cols}, "
     #            f"cell_size_x={self._cell_size_x}, cell_size_y={self._cell_size_y})")
@@ -49,6 +43,11 @@ class Maze:
     #             output += cell.__repr__()
     #         output += "\n"
     #     return output
+    
+    def generate(self) -> None:
+        self._break_entrance_and_exit()
+        self._break_walls_r(0, 0)
+        self._reset_cells_visited()
     
     def _create_cells(self) -> None:
         self._cells: list[list[Cell]] = []

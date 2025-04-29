@@ -21,7 +21,7 @@ def main() -> None:
     
     # cell1.draw_move(cell2, False)
     maze = Maze(10, 10, 10, 10, 20, 20, window, seed=0)
-    maze._break_entrance_and_exit()
+    maze.generate()
     window.wait_for_close()
 
 if __name__ == "__main__":
