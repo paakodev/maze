@@ -5,9 +5,9 @@ from line import Line
 class Cell:
     def __init__(self, 
                  x1: int, y1: int, x2: int, y2: int, 
-                 window: Window = None,
+                 window: Window = None, # type: ignore
                  wall_color: str = "black",
-                 removed_color: str = None,
+                 removed_color: str = None, # type: ignore
                  has_left_wall: bool = True, 
                  has_right_wall: bool = True,
                  has_top_wall: bool = True,

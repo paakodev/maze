@@ -13,9 +13,9 @@ class Maze:
         num_cols: int,
         cell_size_x: int,
         cell_size_y: int,
-        win: Window = None,
+        win: Window = None, # type: ignore
         draw_delay: float = 0.05,
-        seed: int = None
+        seed: int = None # type: ignore
     ) -> None:
         """ The maze class, handles creating the entire maze. Do not leave Window unset,
         the default is there to facilitate testing."""
