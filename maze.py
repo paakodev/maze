@@ -90,7 +90,7 @@ class Maze:
             list[tuple[Cell, str, int, int]]: 
                 A list of tuples with (Cell, direction, new_row, new_col).
         """
-        neighbors = []
+        neighbors: list[tuple[Cell, str, int, int]] = []
         directions = [
             (-1, 0, "up"),
             (1, 0, "down"),
